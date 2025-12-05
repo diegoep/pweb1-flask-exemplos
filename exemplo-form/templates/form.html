@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>Formulário</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='estilo.css') }}" />
+    </head>
+    <body>
+        <form method="post" action="{{ url_for('index') }}">
+            <label>Nome</label>
+            <input type="text" name="nome" />
+            <input type="submit" value="Enviar" />
+        </form> 
+        {% if nome_processado %}
+            <p>{{ nome_processado }}</p>
+        {% endif %}
+    </body>
