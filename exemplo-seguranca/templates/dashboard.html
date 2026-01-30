@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Sistema de Login{% endblock %}
+
+{% block content %}
+<div class="user-info">
+    <h2>Dashboard do Usuário</h2>
+    <p>Bem-vindo de volta, <strong>{{ usuario.username }}</strong>!</p>
+</div>
+
+<div class="info-box">
+    <h3>Informações da Conta</h3>
+    <ul class="info-list">
+        <li><strong>Nome de Usuário:</strong> {{ usuario.username }}</li>
+        <li><strong>Email:</strong> {{ usuario.email }}</li>
+        <li><strong>Conta criada em:</strong> {{ usuario.criado_em.strftime('%d/%m/%Y às %H:%M:%S') }}</li>
+    </ul>
+</div>
+
+<div class="info-box">
+    <h3>🔐 Informações de Segurança da Sua Conta</h3>
+    <p><strong>Hash da Senha (SHA-256):</strong></p>
+    <div class="code-block">
+        <code>{{ usuario.senha_hash }}</code>
+    </div>
+
+    <p style="margin-top: 15px;"><strong>Salt Único:</strong></p>
+    <div class="code-block">
+        <code>{{ usuario.salt }}</code>
+    </div>
+
+    <div class="alert" style="margin-top: 20px;">
+        <strong>ℹ️ Nota Educacional:</strong>
+        Estas informações são exibidas apenas para fins didáticos. Em um sistema real, o hash e o salt nunca devem ser expostos aos usuários. Eles devem permanecer protegidos no banco de dados.
+    </div>
+</div>
+
+<div class="btn-group">
+    <a href="{{ url_for('listar_usuarios') }}" class="btn">Ver Todos os Usuários</a>
+    <a href="{{ url_for('info_seguranca') }}" class="btn btn-secondary">Informações de Segurança</a>
+</div>
+{% endblock %}

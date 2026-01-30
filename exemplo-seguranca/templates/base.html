@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Login{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <div>
+                    <h1>🔐 Sistema de Segurança Flask</h1>
+                </div>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Início</a></li>
+                    {% if session.username %}
+                        <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                        <li><a href="{{ url_for('listar_usuarios') }}">Usuários</a></li>
+                        <li><a href="{{ url_for('info_seguranca') }}">Info Segurança</a></li>
+                        <li><a href="{{ url_for('logout') }}">Sair ({{ session.username }})</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('registro') }}">Registrar</a></li>
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('info_seguranca') }}">Info Segurança</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+
+        <main class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

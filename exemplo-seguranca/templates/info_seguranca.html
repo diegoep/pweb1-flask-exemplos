@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Informações de Segurança{% endblock %}
+
+{% block content %}
+<h2>Informações de Segurança - Hash SHA-256</h2>
+
+<div class="info-box">
+    <h3>🔐 O que é Hash?</h3>
+    <p>Hash é uma função matemática que transforma dados de qualquer tamanho em uma sequência de bytes de tamanho fixo. É um processo unidirecional - você não pode reverter o hash para obter os dados originais.</p>
+</div>
+
+<div class="info-box">
+    <h3>🔢 SHA-256</h3>
+    <p>SHA-256 (Secure Hash Algorithm 256-bit) é um algoritmo criptográfico que:</p>
+    <ul style="margin-left: 20px; margin-top: 10px;">
+        <li>Gera um hash de 256 bits (64 caracteres hexadecimais)</li>
+        <li>É determinístico - mesma entrada sempre gera a mesma saída</li>
+        <li>Qualquer mudança mínima na entrada muda completamente o hash</li>
+        <li>É computacionalmente inviável reverter o processo</li>
+    </ul>
+</div>
+
+<div class="info-box">
+    <h3>🧂 O que é Salt?</h3>
+    <p>Salt é um valor aleatório único adicionado à senha antes do hash. Benefícios:</p>
+    <ul style="margin-left: 20px; margin-top: 10px;">
+        <li>Previne rainbow table attacks</li>
+        <li>Senhas iguais geram hashes diferentes</li>
+        <li>Aumenta significativamente a segurança</li>
+        <li>Cada usuário tem seu próprio salt único</li>
+    </ul>
+</div>
+
+<div class="info-box">
+    <h3>🔄 Processo de Hash no Sistema</h3>
+    <p><strong>Durante o Registro:</strong></p>
+    <div class="code-block">
+        <code>
+1. Usuário fornece senha: "minhaSenha123"
+2. Sistema gera salt aleatório: "a3f9d8c..."
+3. Combina: "minhaSenha123a3f9d8c..."
+4. Aplica SHA-256: "8f7a3b2..."
+5. Armazena apenas o hash e o salt
+        </code>
+    </div>
+
+    <p style="margin-top: 20px;"><strong>Durante o Login:</strong></p>
+    <div class="code-block">
+        <code>
+1. Usuário fornece senha: "minhaSenha123"
+2. Sistema recupera o salt: "a3f9d8c..."
+3. Combina: "minhaSenha123a3f9d8c..."
+4. Aplica SHA-256: "8f7a3b2..."
+5. Compara com hash armazenado
+6. Se idênticos, login aprovado
+        </code>
+    </div>
+</div>
+
+<div class="alert">
+    <strong>⚠️ IMPORTANTE - Limitações do SHA-256 para Senhas:</strong>
+    <p style="margin-top: 10px;">Embora SHA-256 seja seguro, NÃO é ideal para senhas porque:</p>
+    <ul style="margin-left: 20px; margin-top: 10px;">
+        <li><strong>É muito rápido:</strong> Facilita ataques de força bruta</li>
+        <li><strong>Hardware especializado:</strong> GPUs podem calcular bilhões de hashes por segundo</li>
+        <li><strong>Sem "cost factor":</strong> Não pode ser ajustado para ser mais lento</li>
+    </ul>
+</div>
+
+<div class="info-box">
+    <h3>✅ Alternativas Recomendadas para Produção</h3>
+    <p><strong>1. bcrypt</strong></p>
+    <ul style="margin-left: 20px;">
+        <li>Projetado especificamente para senhas</li>
+        <li>Salt automático integrado</li>
+        <li>Cost factor ajustável (pode ser mais lento conforme hardware melhora)</li>
+        <li>Amplamente usado e testado</li>
+    </ul>
+
+    <p style="margin-top: 15px;"><strong>2. Argon2</strong></p>
+    <ul style="margin-left: 20px;">
+        <li>Vencedor da Password Hashing Competition (2015)</li>
+        <li>Resistente a ataques com GPU e ASIC</li>
+        <li>Configurável em tempo e memória</li>
+        <li>Estado da arte em segurança de senhas</li>
+    </ul>
+
+    <p style="margin-top: 15px;"><strong>3. PBKDF2</strong></p>
+    <ul style="margin-left: 20px;">
+        <li>Padrão recomendado por NIST</li>
+        <li>Múltiplas iterações de hash</li>
+        <li>Amplamente suportado</li>
+    </ul>
+</div>
+
+<div class="info-box">
+    <h3>📚 Exemplo com bcrypt</h3>
+    <div class="code-block">
+        <code>
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt(app)
+
+# Hash
+senha_hash = bcrypt.generate_password_hash('senha123')
+
+# Verificar
+bcrypt.check_password_hash(senha_hash, 'senha123')
+        </code>
+    </div>
+</div>
+
+<div style="margin-top: 30px; text-align: center;">
+    <a href="{{ url_for('index') }}" class="btn">Voltar ao Início</a>
+</div>
+{% endblock %}

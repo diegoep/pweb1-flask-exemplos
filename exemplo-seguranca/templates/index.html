@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Início - Sistema de Login{% endblock %}
+
+{% block content %}
+<div class="welcome">
+    <h2>Bem-vindo ao Sistema de Demonstração de Segurança</h2>
+    <p>Este projeto demonstra o uso de hash SHA-256 para armazenamento seguro de senhas</p>
+
+    {% if session.username %}
+        <div class="btn-group">
+            <a href="{{ url_for('dashboard') }}" class="btn">Acessar Dashboard</a>
+            <a href="{{ url_for('info_seguranca') }}" class="btn btn-secondary">Ver Informações de Segurança</a>
+        </div>
+    {% else %}
+        <div class="btn-group">
+            <a href="{{ url_for('registro') }}" class="btn">Criar Conta</a>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary">Fazer Login</a>
+        </div>
+    {% endif %}
+</div>
+
+<div class="info-box">
+    <h3>Sobre este Projeto</h3>
+    <p>Este é um exemplo didático de sistema de autenticação em Flask que demonstra:</p>
+    <ul class="info-list">
+        <li>✓ Hash de senhas usando SHA-256 com salt</li>
+        <li>✓ Armazenamento seguro de credenciais</li>
+        <li>✓ Gerenciamento de sessões</li>
+        <li>✓ Proteção de rotas</li>
+        <li>✓ Validação de entrada</li>
+    </ul>
+</div>
+
+<div class="alert">
+    <strong>⚠️ Aviso Importante:</strong>
+    Este projeto usa SHA-256 para fins educacionais. Em produção, use bcrypt, argon2 ou PBKDF2 que são algoritmos projetados especificamente para hash de senhas.
+</div>
+{% endblock %}

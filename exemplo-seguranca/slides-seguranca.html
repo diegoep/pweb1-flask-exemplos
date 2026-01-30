@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segurança e Autenticação - Slides</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide {
+            background: white;
+            width: 90%;
+            max-width: 1000px;
+            height: 80vh;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 3em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #764ba2;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+        }
+
+        h3 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        p, li {
+            font-size: 1.3em;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        ul {
+            margin-left: 40px;
+        }
+
+        .highlight {
+            background: #ffeaa7;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .danger {
+            color: #d63031;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #00b894;
+            font-weight: bold;
+        }
+
+        .code-box {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #999;
+            font-size: 1em;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-item {
+            background: #667eea;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Slide 1: Título -->
+        <div class="slide active">
+            <div class="slide-number">1/9</div>
+            <h1>🔐 Segurança e Autenticação</h1>
+            <h2 style="text-align: center; color: #764ba2;">Protegendo Senhas em Aplicações Web</h2>
+            <p style="text-align: center; font-size: 1.5em; margin-top: 40px;">
+                Por que e como proteger dados sensíveis dos usuários
+            </p>
+        </div>
+
+        <!-- Slide 2: O Problema -->
+        <div class="slide">
+            <div class="slide-number">2/9</div>
+            <h2>⚠️ O Problema: Senhas em Texto Plano</h2>
+            <p><span class="danger">NUNCA</span> armazene senhas em texto plano!</p>
+
+            <div class="code-box">
+# ❌ PERIGOSO - NÃO FAÇA ISSO!
+usuarios = {
+    "joao": "senha123",
+    "maria": "abc123"
+}
+            </div>
+
+            <h3>Por quê?</h3>
+            <ul>
+                <li>Se o banco de dados vazar, <span class="danger">todas as senhas</span> ficam expostas</li>
+                <li>Funcionários com acesso ao DB podem ver as senhas</li>
+                <li>Usuários que reutilizam senhas ficam vulneráveis em outros sites</li>
+                <li>Violação de privacidade e confiança</li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: Hash -->
+        <div class="slide">
+            <div class="slide-number">3/9</div>
+            <h2>🔨 Solução: Hash de Senhas</h2>
+            <p>Hash é uma <span class="highlight">função unidirecional</span> que transforma dados em uma string fixa.</p>
+
+            <div class="flow">
+                <div class="flow-item">senha123</div>
+                <span class="arrow">→</span>
+                <div class="flow-item">Hash</div>
+                <span class="arrow">→</span>
+                <div class="flow-item">ef92b778...</div>
+            </div>
+
+            <h3>Características Importantes:</h3>
+            <ul>
+                <li><span class="success">Unidirecional</span>: impossível reverter o hash para obter a senha</li>
+                <li><span class="success">Determinístico</span>: mesma entrada = mesmo hash</li>
+                <li><span class="success">Efeito avalanche</span>: pequena mudança = hash completamente diferente</li>
+            </ul>
+
+            <div class="code-box">
+# Exemplo com SHA-256
+hash("senha123")  → ef92b778bafe771e89...
+hash("senha124")  → 9a3d6f2c1b8e4d7a32...
+            </div>
+        </div>
+
+        <!-- Slide 4: Rainbow Tables -->
+        <div class="slide">
+            <div class="slide-number">4/9</div>
+            <h2>🌈 Rainbow Table Attack</h2>
+            <p>Uma <span class="highlight">rainbow table</span> é um banco de dados pré-computado de hashes comuns.</p>
+
+            <div class="card">
+                <h3>Como funciona o ataque:</h3>
+                <ol>
+                    <li>Atacante cria uma tabela gigante: <code>senha → hash</code></li>
+                    <li>Pré-computa milhões/bilhões de senhas comuns</li>
+                    <li>Quando obtém um hash vazado, busca na tabela</li>
+                    <li>Se encontrar, descobre a senha original instantaneamente</li>
+                </ol>
+            </div>
+
+            <div class="code-box">
+# Rainbow Table (exemplo simplificado)
+"123456"    → 8d969eef6ecad3c29a3a...
+"password"  → 5e884898da28047151d0...
+"senha123"  → ef92b778bafe771e89a2...
+"admin"     → 8c6976e5b5410415bde9...
+            </div>
+
+            <p><span class="danger">Problema:</span> Senhas comuns são quebradas instantaneamente!</p>
+        </div>
+
+        <!-- Slide 5: Salt -->
+        <div class="slide">
+            <div class="slide-number">5/9</div>
+            <h2>🧂 A Solução: Salt (Sal)</h2>
+            <p>Um <span class="highlight">salt</span> é um valor aleatório único adicionado a cada senha antes do hash.</p>
+
+            <div class="flow">
+                <div class="flow-item">senha123</div>
+                <span class="arrow">+</span>
+                <div class="flow-item">salt: x7f9k2...</div>
+                <span class="arrow">→</span>
+                <div class="flow-item">Hash</div>
+                <span class="arrow">→</span>
+                <div class="flow-item">hash único</div>
+            </div>
+
+            <h3>Benefícios:</h3>
+            <ul>
+                <li><span class="success">Rainbow tables inúteis</span>: cada senha tem salt único</li>
+                <li><span class="success">Hashes diferentes</span>: mesma senha = hashes diferentes para usuários diferentes</li>
+                <li><span class="success">Proteção extra</span>: atacante precisa quebrar cada hash individualmente</li>
+            </ul>
+
+            <div class="code-box">
+# Com Salt
+user1: hash("senha123" + "abc123xyz") → 7f2a9b...
+user2: hash("senha123" + "xyz789abc") → 3d8f1c...
+# Mesma senha, hashes completamente diferentes!
+            </div>
+        </div>
+
+        <!-- Slide 6: Implementação com Salt -->
+        <div class="slide">
+            <div class="slide-number">6/9</div>
+            <h2>💻 Implementação Prática</h2>
+
+            <div class="code-box">
+import hashlib
+import os
+
+# 1. Gerar salt aleatório (32 bytes)
+salt = os.urandom(32).hex()
+
+# 2. Combinar senha + salt
+senha_com_salt = "senha123" + salt
+
+# 3. Criar hash
+hash_final = hashlib.sha256(
+    senha_com_salt.encode('utf-8')
+).hexdigest()
+
+# 4. Armazenar AMBOS: hash E salt no DB
+# user = {
+#     "hash": hash_final,
+#     "salt": salt
+# }
+            </div>
+
+            <p style="margin-top: 20px;">⚠️ O salt <span class="highlight">não é secreto</span> - pode ser armazenado junto com o hash!</p>
+        </div>
+
+        <!-- Slide 7: Fluxo de Autenticação -->
+        <div class="slide">
+            <div class="slide-number">7/9</div>
+            <h2>🔄 Fluxo de Autenticação Moderna</h2>
+
+            <h3>1️⃣ Registro (Sign Up):</h3>
+            <div class="flow">
+                <div class="flow-item">Usuário envia senha</div>
+                <span class="arrow">→</span>
+                <div class="flow-item">Gera salt único</div>
+                <span class="arrow">→</span>
+                <div class="flow-item">Hash(senha + salt)</div>
+                <span class="arrow">→</span>
+                <div class="flow-item">Salva hash + salt</div>
+            </div>
+
+            <h3>2️⃣ Login (Sign In):</h3>
+            <div class="flow">
+                <div class="flow-item">Usuário envia senha</div>
+                <span class="arrow">→</span>
+                <div class="flow-item">Busca salt do DB</div>
+                <span class="arrow">→</span>
+                <div class="flow-item">Hash(senha + salt)</div>
+                <span class="arrow">→</span>
+                <div class="flow-item">Compara hashes</div>
+            </div>
+
+            <p style="margin-top: 30px; text-align: center;">
+                <span class="success">✓ Hashes iguais</span> = Senha correta = Login permitido<br>
+                <span class="danger">✗ Hashes diferentes</span> = Senha incorreta = Login negado
+            </p>
+        </div>
+
+        <!-- Slide 8: Boas Práticas -->
+        <div class="slide">
+            <div class="slide-number">8/9</div>
+            <h2>✅ Boas Práticas Modernas</h2>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>❌ NÃO Use:</h3>
+                    <ul style="margin-left: 20px;">
+                        <li>MD5</li>
+                        <li>SHA-1</li>
+                        <li>SHA-256 simples</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><small>Muito rápidos = vulneráveis a brute force</small></p>
+                </div>
+
+                <div class="card">
+                    <h3>✅ Use:</h3>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>bcrypt</strong></li>
+                        <li><strong>Argon2</strong></li>
+                        <li><strong>PBKDF2</strong></li>
+                    </ul>
+                    <p style="margin-top: 10px;"><small>Lentos propositalmente + salt automático</small></p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px;">Por que algoritmos específicos para senhas?</h3>
+            <ul>
+                <li><span class="highlight">Lentidão intencional</span>: dificulta ataques de força bruta</li>
+                <li><span class="highlight">Cost factor ajustável</span>: pode aumentar a dificuldade com o tempo</li>
+                <li><span class="highlight">Salt automático</span>: já incluído no algoritmo</li>
+                <li><span class="highlight">Resistência a hardware especializado</span>: protege contra GPUs/ASICs</li>
+            </ul>
+        </div>
+
+        <!-- Slide 9: Resumo -->
+        <div class="slide">
+            <div class="slide-number">9/9</div>
+            <h2>📝 Resumo</h2>
+
+            <div class="card" style="margin-bottom: 20px;">
+                <h3>1. Nunca armazene senhas em texto plano</h3>
+                <p>Use hash para proteger as senhas no banco de dados</p>
+            </div>
+
+            <div class="card" style="margin-bottom: 20px;">
+                <h3>2. Sempre use salt</h3>
+                <p>Salt único por usuário previne rainbow table attacks</p>
+            </div>
+
+            <div class="card" style="margin-bottom: 20px;">
+                <h3>3. Use algoritmos apropriados</h3>
+                <p>bcrypt, Argon2 ou PBKDF2 em produção (não SHA-256)</p>
+            </div>
+
+            <div class="card">
+                <h3>4. Autenticação = Comparação de hashes</h3>
+                <p>Hash(senha_digitada + salt) == hash_armazenado</p>
+            </div>
+
+            <p style="text-align: center; margin-top: 40px; font-size: 1.5em;">
+                🔐 <span class="success">Segurança começa com boas práticas!</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Próximo →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            updateButtons();
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        // Navegação por teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentSlide > 0) {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight' && currentSlide < totalSlides - 1) {
+                changeSlide(1);
+            }
+        });
+
+        // Inicializa
+        updateButtons();
+    </script>
+</body>
+</html>

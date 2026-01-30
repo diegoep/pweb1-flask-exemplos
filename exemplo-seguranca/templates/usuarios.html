@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Usuários - Sistema de Login{% endblock %}
+
+{% block content %}
+<h2>Usuários Cadastrados</h2>
+<p>Lista de todos os usuários registrados no sistema</p>
+
+{% if usuarios %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nome de Usuário</th>
+                <th>Email</th>
+                <th>Data de Cadastro</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.username }}</td>
+                <td>{{ usuario.email }}</td>
+                <td>{{ usuario.criado_em }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert">
+        <strong>ℹ️ Nenhum usuário cadastrado ainda.</strong>
+        Seja o primeiro a criar uma conta!
+    </div>
+{% endif %}
+
+<div style="margin-top: 30px;">
+    <a href="{{ url_for('dashboard') }}" class="btn">Voltar ao Dashboard</a>
+</div>
+{% endblock %}
